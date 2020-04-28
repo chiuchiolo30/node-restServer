@@ -6,12 +6,13 @@ const bcryptJS = require('bcryptjs');
 const _ = require('underscore');
 const app = express();
 const Usuario = require('../models/usuario');
+const { verificaToken, verificaAdminRole } = require('../middleware/autenticacion');
 
 
 //============================================================================
 // Obtener usuarios a travez del método GET
 //============================================================================
-app.get('/usuario', (req, res) => {
+app.get('/usuario', verificaToken, (req, res) => {
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -42,7 +43,7 @@ app.get('/usuario', (req, res) => {
 //============================================================================
 // Crear un usuario através del método POST
 //============================================================================
-app.post('/usuario', (req, res) => {
+app.post('/usuario', [verificaToken, verificaAdminRole], (req, res) => {
 
     let body = req.body;
 
@@ -70,7 +71,7 @@ app.post('/usuario', (req, res) => {
 //============================================================================
 // Actualizar usuario através del método PUT
 //============================================================================
-app.put('/usuario/:id', (req, res) => {
+app.put('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
     let id = req.params.id;
     // con el pick filtro los atributos que se pueden actualizar
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
@@ -100,7 +101,7 @@ app.put('/usuario/:id', (req, res) => {
 //============================================================================
 // Borrar usuario através del método DELETE
 //============================================================================
-app.delete('/usuario/:id', (req, res) => {
+app.delete('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
 
     let id = req.params.id;
 

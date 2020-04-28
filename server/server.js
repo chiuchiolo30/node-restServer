@@ -18,9 +18,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //============================================================================
-// Middleware
+// Routes - Middleware - Configuración global de Routes
 //============================================================================
-app.use(require('./routes/usuario'));
+app.use(require('./routes/index'));
+
 
 
 
