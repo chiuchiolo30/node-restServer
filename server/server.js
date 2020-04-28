@@ -5,6 +5,7 @@ require('./config/config');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 
 
@@ -17,62 +18,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //============================================================================
-// Obtener usuarios a travez del método GET
+// Middleware
 //============================================================================
-app.get('/usuario', (req, res) => {
+app.use(require('./routes/usuario'));
 
 
-    res.json('Get usuarios');
 
+mongoose.connect(process.env.URLDB, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useCreateIndex: true
+}, (err, res) => {
+    if (err) throw err;
+
+    console.log(`Base de datos: \x1b[32m%s\x1b[0m`, 'ONLINE');
 
 });
-
-//============================================================================
-// Crear un usuario através del método POST
-//============================================================================
-app.post('/usuario', (req, res) => {
-
-    let body = req.body;
-
-    if (body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            mensaje: 'El nombre es necesario'
-        });
-    } else {
-        res.json({
-            persona: body
-        });
-    }
-
-
-});
-//============================================================================
-// Actualizar usuario através del método PUT
-//============================================================================
-app.put('/usuario/:id', (req, res) => {
-    let id = req.params.id;
-
-    res.json({
-        id
-    });
-
-
-});
-//============================================================================
-// Borrar usuario através del método DELETE
-//============================================================================
-app.delete('/usuario/:id', (req, res) => {
-
-
-    res.json('Delete usuarios');
-
-
-});
-
-
-
-
 
 app.listen(process.env.PORT, () => {
     console.log(`Escuchando puerto ${ process.env.PORT }: \x1b[32m%s\x1b[0m`, 'ONLINE');
